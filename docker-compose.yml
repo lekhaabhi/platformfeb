@@ -5,13 +5,13 @@ services:
     build: ./api-gateway
     ports:
       - "8000:8000"
+    depends_on:
+      - nl2sparql
+
+  nl2sparql:
+    build: ./nl2sparql
 
   ui:
     build: ./ui
     ports:
-      - "5000:5000"
-    depends_on:
-      - api-gateway
-  
-  nl2sparql:
-    build: ./nl2sparql
+      - "5000:80"

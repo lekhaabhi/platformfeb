@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CODA Data Discovery UI</title>
+</head>
+<body>
+
+<h2>CODA Data Discovery UI</h2>
+
+<input id="query" placeholder="Enter natural language query" size="60">
+<button onclick="submitQuery()">Submit</button>
+
+<h3>API Response</h3>
+<pre id="result"></pre>
+
+<script>
+async function submitQuery() {
+  const query = document.getElementById("query").value;
+
+  const response = await fetch("http://localhost:8000/query", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ query: query })
+  });
+
+  const data = await response.json();
+  document.getElementById("result").textContent =
+    JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>

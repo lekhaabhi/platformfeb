@@ -1,8 +1,18 @@
-from fastapi import FastAPI # type: ignore
+from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="CODA API Gateway")
+
+# 🔹 CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],        # for now, allow all (DEV ONLY)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class QueryRequest(BaseModel):
     query: str
@@ -13,7 +23,6 @@ def health_check():
 
 @app.post("/query")
 def handle_query(req: QueryRequest):
-    # Call NL → SPARQL service
     resp = requests.post(
         "http://nl2sparql:9000/translate",
         json={"query": req.query},
@@ -25,5 +34,5 @@ def handle_query(req: QueryRequest):
     return {
         "nl_query": req.query,
         "sparql": translation["sparql"],
-        "translation_status": translation["status"]
+        "status": translation["status"]
     }
