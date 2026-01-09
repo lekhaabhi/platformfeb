@@ -5,10 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="CODA API Gateway")
 
-# 🔹 CORS configuration
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],        # for now, allow all (DEV ONLY)
+    allow_origins=["*"],        # Lets allow all origins for now
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
