@@ -7,6 +7,7 @@ services:
       - "8000:8000"
     depends_on:
       - nl2sparql
+      - graphdb
 
   nl2sparql:
     build: ./nl2sparql
@@ -15,3 +16,14 @@ services:
     build: ./ui
     ports:
       - "5000:80"
+  
+  graphdb:
+    image: ontotext/graphdb:10.6.1
+    container_name: graphdb
+    ports:
+      - "7200:7200"
+    volumes:
+      - graphdb-data:/opt/graphdb/home
+
+volumes:
+  graphdb-data:

@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="CODA API Gateway")
 
+GRAPHDB_ENDPOINT = "http://graphdb:7200/repositories/feb-sample"
+
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
@@ -36,3 +38,30 @@ def handle_query(req: QueryRequest):
         "sparql": translation["sparql"],
         "status": translation["status"]
     }
+
+@app.get("/test-graph")
+def test_graphdb():
+    sparql_query = """
+    PREFIX ex: <http://example.org/schema#>
+
+    SELECT ?patient ?diagnosis
+    WHERE {
+        ?patient a ex:Patient ;
+                ex:hasVisit ?visit .
+        ?visit ex:hasDiagnosis ?diagnosis .
+    }
+    LIMIT 10
+    """
+
+    headers = {
+        "Accept": "application/sparql+json",
+        "Content-Type": "application/sparql-query"
+    }
+
+    response = requests.post(
+        GRAPHDB_ENDPOINT,
+        data=sparql_query,
+        headers=headers
+    )
+
+    return response.json()
